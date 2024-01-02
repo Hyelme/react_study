@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>13. 예제</title>
+    <title>15. 예제</title>
 </head>
 <body>
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
@@ -12,28 +12,28 @@
     <div id="root"></div>
     <script type="text/babel">
         const rootElement = document.getElementById("root")
+        
         /*
-        // element와 component의 차이점 알기
-        * DOM : 논리 트리
-        * 컴포넌트 : 앨리먼트의 집합
-        * 앨리먼트 : 요소
+            * 찍어내기 / 반복 작업 => 함수화
+            * useState / useEffect 반복 => 커스텀 훅
+            
+            커스텀 훅 만들기(use{Name})
+            - 각 상태가 변경될 때에만 해당 상태를 localStorage에 저장하는 훅 만들기
         */
+        function useLocalStorage (itemName, value = "") { // 두 번째 인자값이 없으면 빈값으로 저장
+            const [state, setState] = React.useState(() => window.localStorage.getItem({itemName}) || value);
 
-        // React에서 제공하는 상태 관리 툴 사용하기(useState)
-        /*
-            react의 상태값을 관리해주는 훅(hook)
-            useState를 쓰는 컴포넌트의 상태에 따라 useState 객체의 상태 또한 바뀐다.
-            컴포넌트가 랜더링 될 때, useState도 초기화 된다.
-        */
+            React.useEffect(() => {
+                window.localStorage.setItem(itemName, state);
+            }, [state]);
+
+            return [state, setState];
+        }
+
         const App = () => {
-            const [typing, setTyping] = React.useState(false);
-            const [keyword, setKeyword] = React.useState("");
-            const [result, setResult] = React.useState("");
-
-            // useState의 다른 표현
-            const keywordState = React.useState("");
-            const keyword2 = keywordState[0];    // keyword 데이터
-            const setKeyword2 = keywordState[1]; // setKeyword
+            const [typing, setTyping] = useLocalStorage("typing", false);
+            const [keyword, setKeyword] = useLocalStorage("keyword");
+            const [result, setResult] = useLocalStorage("result");
 
             function handleChange(event) {
                 setKeyword(event.target.value);
@@ -47,7 +47,7 @@
 
             return (
                 <>
-                    <input onChange={handleChange} />
+                    <input onChange={handleChange} value={keyword} />
                     <button onClick={handleClick}>search</button>
                     <p>{typing ? `Looking for ${keyword}...` : result}</p>
                 </>
