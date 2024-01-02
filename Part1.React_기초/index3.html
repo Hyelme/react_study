@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>13. 예제</title>
+</head>
+<body>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <div id="root"></div>
+    <script type="text/babel">
+        const rootElement = document.getElementById("root")
+        /*
+        // element와 component의 차이점 알기
+        * DOM : 논리 트리
+        * 컴포넌트 : 앨리먼트의 집합
+        * 앨리먼트 : 요소
+        */
+
+        // React에서 제공하는 상태 관리 툴 사용하기(useState)
+        /*
+            useState를 쓰는 컴포넌트의 상태에 따라 useState 객체의 상태 또한 바뀐다.
+            컴포넌트가 랜더링 될 때, useState도 초기화 된다.
+        */
+        const App = () => {
+            const [keyword, setKeyword] = React.useState("");
+            const [typing, setTyping] = React.useState(false);
+            const [result, setResult] = React.useState("");
+
+            // useState의 다른 표현
+            const keywordState = React.useState("");
+            const keyword2 = keywordState[0];
+            const setKeyword2 = keywordState[1];
+
+            function handleChange(event) {
+                setKeyword(event.target.value);
+                setTyping(true);
+            }
+            
+            function handleClick() {
+                setTyping(false);
+                setResult(`We find results of ${keyword}`);
+            }
+
+            return (
+                <>
+                    <input onChange={handleChange} />
+                    <button onClick={handleClick}>search</button>
+                    <p>{typing ? `Looking for ${keyword}...` : result}</p>
+                </>
+            );
+        };
+
+        ReactDOM.render(<App />, rootElement);
+    </script>
+</body>
+</html>

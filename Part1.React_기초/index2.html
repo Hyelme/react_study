@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>08~11. 예제</title>
+</head>
+<body>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <div id="root"></div>
+    <!-- 1. 바닐라 js로 구현한 경우 : 모든 페이지가 재 랜더링이 이루어질 때 변경된 부분이 적용 -->
+    <!-- <script type="text/babel">
+        const rootElement = document.getElementById("root");
+        function random() {
+            const number = Math.floor(Math.random() * (10 - 1) + 1);
+        const element = `
+            <button>${number}</button>
+        `;
+
+        rootElement.innerHTML = element;
+        }
+
+        setInterval(random, 1000);
+    </script> -->
+
+    <!-- 2. react flfosejfld : 변경된 부분만 다시 적용 -->
+    <script type="text/babel">
+        // React 앨리먼트는 불변객체이다. 트리 구조로 탐색하며 변경된 타입이 있으면 해당 내용을 변경한다.
+        // 타입이 같은 경우에는 key를 먼저 비교 후, props를 비교하여 변경된 내용만 적용한다.
+        const rootElement = document.getElementById("root");
+        function random() {
+            const number = Math.floor(Math.random() * (10 - 1) + 1);
+        const element = <button>{number}</button>;
+
+            ReactDOM.render(element, rootElement);
+        }
+
+        // setInterval(random, 1000);
+
+
+        function tick() {
+            const element = (
+                <div>
+                    <h1>Hello, world!</h1>
+                    <h2>It is {new Date().toLocaleTimeString()}.</h2>
+                </div>
+            );
+
+            ReactDOM.render(element, rootElement);
+        }
+
+        // setInterval(tick, 1000);
+
+
+        // event handler 사용하기
+        // 바닐라 js : on{event}, react : on{Event}
+        // on{Event} 메서드 사용
+        const handleMouseOut = () => alert("bye");
+        const element = 
+        <button 
+            onClick={() => alert("pressed")} 
+            onMouseOut={handleMouseOut}
+        >
+            Button
+        </button>
+
+        // on{Event} 사용하기 2
+        const state = { keyword: "", typing: false, result: "" };
+
+        const App = () => {
+            // 1. input 태그에 입력한 값을 alert로 띄우는 함수
+            // 2. input 창에 입력된 값을 state 변수에 저장
+            function handleChange() {
+                // alert(event.target.value);
+
+                setState({ typing: true, keyword: event.target.value });
+            }
+
+            // 버튼을 클릭하면 result에 해당 값 저장
+            function handleClick() {
+                setState({
+                    typing: false,
+                    result: `We find results of ${state.keyword}`
+                });
+            }
+
+            return (
+                // setState는 전역 상태로 값을 입력만 했을 뿐 
+                // return 작업은 불변 객체이기 때문에 한 번 render된 작업은 자동으로 리랜더링 되지 않기 때문에 값이 나오지 않는다
+                // render 작업을 추가해야한다.
+                <>
+                    <input onChange={handleChange}/>
+                    <button onClick={handleClick}>search</button>
+                    <p>{state.typing ? `Looking for ${state.keyword}...` : state.result}</p>
+                </>            
+            )
+        };
+
+        //전역상태를 업데이트 할 함수(이전 객체를 새로운 객체로 덮어쓰기)
+        function setState(newState) {
+            Object.assign(state, newState);
+            render();
+        }
+
+        // 랜더 작업(변경된 내용만 적용된다.)
+        function render() {
+            ReactDOM.render(<App />, rootElement)
+        }
+
+        render();
+    </script>
+</body>
+</html>

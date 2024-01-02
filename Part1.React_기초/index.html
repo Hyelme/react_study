@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- babel cdn이 존재해야 script 태그 내의 react 코드를 javascript가 이해할 수 있다. -->
+		<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <title>2~6 예제</title>
+</head>
+<body>
+	<div id="root"></div>
+  <script type="text/babel">
+    const rootElement = document.getElementById("root");
+    const paint = (title, description) => (
+			<>
+				<h1>{title}</h1>
+				<h3>{description}</h3>
+			</>
+		);
+
+		const element = (
+			<>
+				{paint("Good", "good")}
+				{paint("Bad", "bad")}
+				{paint("Soso", "soso")}
+			</>
+		);
+
+
+		// 사용자 정의 컴포넌트
+		// JSX 기반의 props를 인자로 전달 받은 HTML 태그 형태의 함수 생성
+		// 명시적으로 사용자 정의 컴포넌트는 대문자로 시작해야한다.
+		const Paint = ({ title, description, children }) => (
+			<> 
+				<h1>{title}</h1>
+				<h3>{description}</h3>
+				{children}
+			</>
+		);
+
+		const element2 = (
+			<>
+				<Paint title="Good" description="good">
+					<h1>hi</h1>
+				</Paint>
+				<Paint title="Bad" description="bad" />
+				<Paint title="Soso" description="soso" />
+			</>
+		);
+
+        const Text = ({ text }) => {
+            // text가 대문자로 시작하면 h1, 소문자로 시작하면 h3를 사용 (javascript)
+            if(text.charAt(0) === text.charAt(0).toUpperCase()) {
+                return <h1>{text}</h1>
+            } else {
+                return <h3>{text}</h3>
+            }
+        };
+
+        const element3 = (
+            <>
+                <Text text="Text" />
+                <Text text="text" />
+            </>
+        );
+
+
+
+
+    ReactDOM.render(element3, rootElement);
+  </script>
+</body>
+</html>
