@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>23. 예제</title>
+</head>
+<body>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <div id="root"></div>
+    <script type="text/babel">
+        const rootElement = document.getElementById("root")
+
+        /*
+            에러 핸들링
+            ErrorBoundary 사용하기 : 오류가 발생한 부분만 에러처리하고 나머지 부분은 정상적으로 동작할 수 있도록 하는 '클래스' 컴포넌트
+             - error를 캐치해서 보여줄 수 있다.
+             - 에러가 났을 떄 보여줄 수 있는 Fallback 컴포넌트를 만들어서 보여줄 수 있다.
+        */
+        class ErrorBoundary extends React.Component {
+            state = { error: null };
+
+            // Error가 발생했을 때 state를 어떻게 set 할 것인지 설정
+            static getDerivedStateFromError(error) {
+                return { error };
+            }
+
+            // 클래스 컴포넌트는 render 함수를 별도로 지정해줘야한다.
+            render() {
+                const { error } = this.state;
+
+                if(error) {
+                    // 인자로 받은 에러 컴포넌트에 인자값을 넣어주고 싶으면 받는 컴포넌트에서 인자로 받은 컴포넌트를 
+                    // JSX로 만들어 인자값을 넘겨주면 된다.
+                    return <this.props.fallback error={error} />;
+                }
+
+                return this.props.children;
+            }
+        };
+
+        const Child = () => {
+            // 에러 발생
+            throw new Error("Something Wrong....");
+            return <p>Child....</p>;
+        };
+
+        const Fallback = ({ error }) => {
+            // alert(error.message);
+            return <p>{ error.message }</p>;
+        };
+
+        const App = () => {
+            return (
+                <>  
+                    <p>APP</p>
+                    <ErrorBoundary fallback={Fallback}>
+                        <Child />
+                    </ErrorBoundary>
+                </>
+            );
+        };
+
+        // react 18에서 render 하는 방법
+        ReactDOM.createRoot(rootElement).render(<App />);
+    </script>
+</body>
+</html>

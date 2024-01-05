@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>27. 상태 끌어올리기 예제</title>
+</head>
+<body>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <div id="root"></div>
+    <script type="text/babel">
+        const rootElement = document.getElementById("root")
+
+        const ID = ({ handleChangeId }) => {
+            return (
+                <>
+                    <label htmlFor="id">ID: </label>
+                    <input type="text" key="id" onChange={handleChangeId} />
+                </>
+            )
+        }
+
+        const Password = ({ handleChangePw }) => {
+            return (
+                <>
+                    <label htmlFor="pw">PW: </label>
+                    <input type="password" key="pw" onChange={handleChangePw} />
+                </>
+            )
+        }
+
+        /*
+            형제 컴포넌트의 상태를 필요로 할 때에는 부모로 상태를 lifting up 해서 사용할 수 있다.
+            하지만, 과도한 lifting은 drilling을 야기할 수 있으므로 주의해야한다.
+        */
+        const App = () => {
+            const [idValue, setIdValue] = React.useState("");
+            const [pwValue, setPwValue] = React.useState("");
+
+            const handleChangeId = (event) => {
+                setIdValue(event.target.value);
+            }
+
+            const handleChangePw = () => {
+                setPwValue(event.target.value)
+            }
+
+            const handleClickLogin = () => {
+                alert(`id: ${idValue}, pw: ${pwValue}`);
+            }
+
+            return (
+                <>
+                    <ID handleChangeId={ handleChangeId }/>
+                    <br />
+                    <Password handleChangePw={ handleChangePw } />
+                    <button onClick={handleClickLogin} disabled={idValue.length === 0 || pwValue.length === 0}>Login</button>
+                </>
+            );
+        };
+
+        ReactDOM.createRoot(rootElement).render(<App />);
+    </script>
+</body>
+</html>
